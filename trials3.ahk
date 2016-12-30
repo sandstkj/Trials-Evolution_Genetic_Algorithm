@@ -1,6 +1,6 @@
 MsgBox, Trials Evolution AI
 
-FileReadLine, line, C:\Users\Kyle\Desktop\Organisms.txt, 1
+FileReadLine, line, Organisms.txt, 1
 if (!fileExist("Organisms.txt")){
 	MsgBox, Organism list does not exist, generating a new species.
 } else {
@@ -8,13 +8,13 @@ if (!fileExist("Organisms.txt")){
 }
 
 Sleep (500)
-SplashImage, C:\Users\Kyle\Desktop\trials.jpg,,,,,
+SplashImage, trials.jpg
 Sleep (500)
 SplashImage, Off
 
 
 
-MouseGetPos, OX, OY,,,
+MouseGetPos, OX, OY
 
 organism := ""
 
@@ -58,10 +58,10 @@ while i < StrLen(line) + 1 {
 	{
 		Break
 	}
-	ImageSearch, FoundX, FoundY, 0,0, 1920, 1080, C:\Users\Kyle\Desktop\checkers.png
+	ImageSearch, FoundX, FoundY, 0,0, 1920, 1080, checkers.png
 	if FoundX > 10
 	{
-		FileAppend, %organism%  `n, C:\Users\Kyle\Desktop\Organisms3.txt
+		FileAppend, %organism%  `n, Organisms3.txt
 		MsgBox, , "Checks detected", , 3
 		MouseMove, OX, OY
 		Sleep (500)
