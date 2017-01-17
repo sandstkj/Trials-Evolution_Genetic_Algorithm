@@ -2,7 +2,7 @@ MsgBox, Select game to get ID
 MouseGetPos,,, id
 WinGetPos , WinX, WinY, , , ahk_id %id%
 
-MsgBox, Window is X %WinX% Y %WinX%`nSelect desktop, select this window, hover mouse on inside of zero
+MsgBox, Window is X %WinX% Y %WinX%`nSelect game, select this window, hover mouse on inside of zero
 MouseGetPos, StartX, StartY
 
 EndX := StartX + 500
