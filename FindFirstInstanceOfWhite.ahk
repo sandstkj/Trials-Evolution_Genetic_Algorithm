@@ -17,7 +17,7 @@ while i < 10 {
 	MouseGetPos, CurX, CurY
 	RelX := CurX - FirstWhiteX
 	RelY := CurY - FirstWhiteY
-	FileAppend, %RelX% %RelY%  `n, Positionsas.txt
+	FileAppend, %RelX% %RelY%  `n, RecordedPositions.txt
 	MsgBox, Move mouse to a point within the white circle and press enter
 	i++
 }
