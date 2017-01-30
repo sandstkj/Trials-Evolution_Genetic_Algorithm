@@ -13,17 +13,26 @@ SplashImage, trials.jpg, b
 Sleep (500)
 SplashImage, Off
 
-MsgBox, Welcome to the Trials AI setup!`nPlease place the mouse above "Stats" and press enter
-MouseGetPos, OX, OY
+; SplashImage, trials.jpg, , , , Reference
 
-MsgBox, Excellent`, now put the mouse in a neutral position on the "Race Results" screen
-MouseGetPos, NeutralX, NeutralY
 
-MsgBox, Finally`, place the mouse above the taskbar and press enter
-MouseGetPos, TaskbarX, TaskbarY
+; MsgBox, Welcome to the Trials AI setup!`nPlease place the mouse above "Stats" and press enter
+; MouseGetPos, StatsX, StatsY
+StatsX := 870
+StatsY := 870
 
+; MsgBox, Excellent`, now put the mouse in a neutral position on the "Race Results" screen
+; MouseGetPos, NeutralX, NeutralY
+NeutralX := 878
+NeutralY := -900
+
+; MsgBox, Finally`, place the mouse above the taskbar and press enter
+; MouseGetPos, TaskbarX, TaskbarY
+TaskbarX := 1000
+TaskbarY := 1020
 
 MsgBox, Click "OK" to start the AI!
+Sleep (3000)
 MouseMove, NeutralX, NeutralY
 Click
 Sleep (2000)
@@ -92,20 +101,21 @@ while i < StrLen(line) + 1 {
 		Score := ReadScore()
 		FileAppend, %organism%`t%Score%`n, Organisms2.txt
 		organism := ""
-		MsgBox, "Checkers detected"
+		; MsgBox, "Checkers detected"
 		MouseMove, NeutralX, NeutralY
 		Click
-		Sleep (500)
+		Sleep (1000)
 		RestartRace()
-		MsgBox "Found checkers, recorded the organism to Organisms2.txt and exiting"
-		Exit
+		; MsgBox "Found checkers, recorded the organism to Organisms2.txt and exiting"
+		; SplashImage, Off
+		; Exit
 	}
 	i++
 }
 MsgBox, End Of Program
 
 RestartRace(){
-	MouseMove, OX, OY
+	MouseMove, StatsX, StatsY
 	Sleep (500)
 	Send {Left Down}
 	Sleep (500)
