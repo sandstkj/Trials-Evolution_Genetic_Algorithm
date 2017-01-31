@@ -1,6 +1,6 @@
 MsgBox, Trials Evolution AI
 
-FileReadLine, line, Organisms.txt, 1
+
 if (!fileExist("Organisms.txt")){
 	MsgBox, Organism list does not exist, generating a new species.
 	Exit
@@ -21,114 +21,106 @@ SplashImage, Off
 StatsX := 870
 StatsY := 870
 
-; MsgBox, Excellent`, now put the mouse in a neutral position on the "Race Results" screen
-; MouseGetPos, NeutralX, NeutralY
-NeutralX := 878
-NeutralY := -900
-
 ; MsgBox, Finally`, place the mouse above the taskbar and press enter
 ; MouseGetPos, TaskbarX, TaskbarY
 TaskbarX := 1000
 TaskbarY := 1020
 
 MsgBox, Click "OK" to start the AI!
-Sleep (3000)
-MouseMove, NeutralX, NeutralY
-Click
+WinActivate, Trials Evolution Gold Edition
 Sleep (2000)
 
 RestartRace()
 
 organism := ""
 
-; Load organism into array
-Array := Object()
-i := 1
-while i < StrLen(line) + 1 {
-	Array.Insert(SubStr(line, i, 1))
-	; MsgBox % Array[i]
-	i++
-}
+curLineNumber := 1
+while (curLineNumber < 7) {
+	FileReadLine, line, Organisms.txt, %curLineNumber%
+	; Load organism into array
+	Array := Object()
 
-i := 1
-; Exit
-
-while i < StrLen(line) + 1 {
-	CurMove := Array[i]
-	if % CurMove == 0
-	{
-		; Go forward
-		Send {Up Down}
-		Sleep (500)
-		Send {Up Up}
-		organism := organism . "0"
-	} else if % CurMove == 1 {
-		; Do nothing
-		Sleep (500)
-		organism := organism . "1"
-	} else if % CurMove == 2 {
-		; Lean left
-		Send {Left Down}
-		Sleep (500)
-		Send {Left Up}
-		organism := organism . "2"
-	} else if % CurMove == 3 {
-		; Lean Right
-		Send {Right Down}
-		Sleep (500)
-		Send {Right Up}
-		organism := organism . "3"
-	}
-	GetKeyState, state, NumpadAdd, P
-	if state = D
-	{
-		MsgBox, Escape detected, ending without saving organism
-		Break
-	}
 	
-	; If the checkers is found, check the score and finish running the organism
-	ImageSearch, FoundX, FoundY, 0,0, 1920, 1080, checkers.png
-	if FoundX > 10
-	{
-		Sleep (1000)
-		Send {Enter Down}
-		Sleep (500)
-		Send {Enter Up}
-		Sleep (3000)
-		DllCall("SetCursorPos", int, %TaskbarX%, int, %TaskbarY%)
-		MouseMove, TaskbarX, TaskbarY
-		Click
-		Score := ReadScore()
-		FileAppend, %organism%`t%Score%`n, Organisms2.txt
-		organism := ""
-		; MsgBox, "Checkers detected"
-		MouseMove, NeutralX, NeutralY
-		Click
-		Sleep (1000)
-		RestartRace()
-		; MsgBox "Found checkers, recorded the organism to Organisms2.txt and exiting"
-		; SplashImage, Off
-		; Exit
+	if (SubStr(line, 1, 1) == "f"){
+		MsgBox, Found end of file
+		Exit
 	}
-	i++
+	index := 1
+	while index < StrLen(line) + 1 {
+		Array.Insert(SubStr(line, index, 1))
+		; MsgBox % Array[i]
+		index++
+	}
+
+	while i < StrLen(line) + 1 {
+		CurMove := Array[i]
+		if % CurMove == 0
+		{
+			; Go forward
+			Send {Up Down}
+			Sleep (500)
+			Send {Up Up}
+			organism := organism . "0"
+		} else if % CurMove == 1 {
+			; Do nothing
+			Sleep (500)
+			organism := organism . "1"
+		} else if % CurMove == 2 {
+			; Lean left
+			Send {Left Down}
+			Sleep (500)
+			Send {Left Up}
+			organism := organism . "2"
+		} else if % CurMove == 3 {
+			; Lean Right
+			Send {Right Down}
+			Sleep (500)
+			Send {Right Up}
+			organism := organism . "3"
+		}
+		GetKeyState, state, NumpadAdd, P
+		if state = D
+		{
+			MsgBox, Escape detected, ending without saving organism
+			Exit
+		}
+		
+		; If the checkers is found, check the score and finish running the organism
+		ImageSearch, FoundX, FoundY, 0,0, 1920, 1080, checkers.png
+		if FoundX > 10
+		{
+			MouseMove, 1190, 851, 10
+			Sleep (1000)
+			Click down
+			Sleep (200)
+			Click up
+			Sleep (500)
+			DllCall("SetCursorPos", int, %TaskbarX%, int, %TaskbarY%)
+			MouseMove, TaskbarX, TaskbarY
+			Click
+			Score := ReadScore()
+			FileAppend, %organism%`t%Score%`n, Organisms2.txt
+			organism := ""
+			WinActivate, Trials Evolution Gold Edition
+			Sleep (1000)
+			RestartRace()
+			Break
+		}
+		i++
+	}
+	curLineNumber++
+	; MsgBox, CurLineNumber is %curLineNumber%
 }
 MsgBox, End Of Program
 
 RestartRace(){
-	MouseMove, StatsX, StatsY
-	Sleep (500)
-	Send {Left Down}
-	Sleep (500)
-	Send {Left Up}
-	Sleep (500)
-	Send {Left Down}
-	Sleep (500)
-	Send {Left Up}
-	Sleep (500)
-	Send {Enter Down}
-	Sleep (500)
-	Send {Enter Up}
-	Sleep (5000)
+	WinActivate, Trials Evolution Gold Edition
+	MouseMove, 292, 870, 100
+	Sleep (2000)
+	Click down
+	Sleep (200)
+	Click up
+	Sleep (7000)
 }
 
 class organism {
