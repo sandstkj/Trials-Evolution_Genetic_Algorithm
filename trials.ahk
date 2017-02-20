@@ -15,7 +15,6 @@ SplashImage, Off
 
 ; SplashImage, trials.jpg, , , , Reference
 
-
 ; MsgBox, Welcome to the Trials AI setup!`nPlease place the mouse above "Stats" and press enter
 ; MouseGetPos, StatsX, StatsY
 StatsX := 870
@@ -26,7 +25,10 @@ StatsY := 870
 TaskbarX := 1000
 TaskbarY := 1020
 
-MsgBox, Click "OK" to start the AI!
+MsgBox, 4,, Click "Yes" to start the AI!'
+IfMsgBox No
+	Exit
+	
 WinActivate, Trials Evolution Gold Edition
 Sleep (2000)
 
@@ -35,8 +37,10 @@ RestartRace()
 organism := ""
 
 curLineNumber := 1
-while (curLineNumber < 7) {
-	FileReadLine, line, Organisms.txt, %curLineNumber%
+Loop, read, Organisms.txt
+{
+	line := A_LoopReadLine
+	; FileReadLine, line, Organisms.txt, %curLineNumber%
 	; Load organism into array
 	Array := Object()
 
@@ -151,6 +155,7 @@ ReadScore(){
 		val += val3
 	} else {
 		MsgBox, Distance could not be found!
+		Exit
 	}
 
 	return val
@@ -180,7 +185,6 @@ CheckRegion(PosX, PosY){
 	} else {
 		MsgBox, Number could not be read!
 		Exit
-		return -1
 	}
 }
 
