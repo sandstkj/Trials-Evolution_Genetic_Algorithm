@@ -4,6 +4,7 @@
 #include <fstream>
 #include <unordered_map>
 #include <typeinfo>
+#include <algorithm>
 
 struct organism {
 	std::string sequence;
@@ -11,7 +12,10 @@ struct organism {
 };
 
 const int CHUNK_SIZE = 4;
+const int NUM_ELITES = 4;
+
 std::string INPUT_FILE = "org.txt";
+std::string ELITE_OUTPUT_FILE = "eliteOrg.txt";
 
 
 // A vector of chunks, with each having identities that have their scores
@@ -42,6 +46,7 @@ int main(int argc, char* argv[]) {
 
 		organisms.push_back(curOrg);
 	}
+	input.close();
 
 	// For each organism
 	for (auto curOrg : organisms) {
@@ -49,7 +54,6 @@ int main(int argc, char* argv[]) {
 		while (curOrg.sequence.length() / CHUNK_SIZE >= chunkScores.size()) {
 			std::unordered_map<std::string, std::vector<int>> c;
 			chunkScores.push_back(c);
-//			std::cout << "Now handling lists of size " << chunkScores.size() << std::endl;
 		}
 
 		// Look at each chunk in it
@@ -73,14 +77,34 @@ int main(int argc, char* argv[]) {
 
 	std::string championSequence = "";
 	auto championScore = 0;
+	unsigned long int totalScores = 0;
 
 	for (organism curOrg : organisms) {
+		totalScores += curOrg.score;
 		if (curOrg.score > championScore) {
 			championScore = curOrg.score;
 			championSequence = curOrg.sequence;
 		}
 	}
 
+	auto averageScore = totalScores / organisms.size();
 	std::cout << "Champion is " << championSequence << " with a score of " << championScore << std::endl;
+	std::cout << "Average score is " << averageScore << std::endl;
 
+	// Organize highest to lowest score
+	std::sort(organisms.begin(), organisms.end(), [](organism a, organism b){return a.score > b.score;});
+	/*
+	for (auto o : organisms) {
+		std::cout << o.sequence << "\t" << o.score << std::endl;
+	}
+	*/
+	// Write elite organisms to file
+	std::ofstream output(ELITE_OUTPUT_FILE);
+	try {
+		for (auto i = 0; i < organisms.size() && i < NUM_ELITES; i++) {
+			output << organisms[i].sequence << "\t" << organisms[i].score << std::endl;
+		}
+	} catch (std::exception &e) {
+
+	}
 }
