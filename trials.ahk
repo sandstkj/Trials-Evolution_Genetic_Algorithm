@@ -1,7 +1,6 @@
 MsgBox, Trials Evolution AI
 
-
-if (!fileExist("Organisms.txt")){
+if (!fileExist("UntestedOrganisms.txt")){
 	MsgBox, Organism list does not exist, generating a new species.
 	Exit
 } else {
@@ -37,10 +36,10 @@ RestartRace()
 organism := ""
 
 curLineNumber := 1
-Loop, read, Organisms.txt
+Loop, read, UntestedOrganisms.txt
 {
 	line := A_LoopReadLine
-	; FileReadLine, line, Organisms.txt, %curLineNumber%
+	; FileReadLine, line, UntestedOrganisms.txt, %curLineNumber%
 	; Load organism into array
 	Array := Object()
 
@@ -103,7 +102,7 @@ Loop, read, Organisms.txt
 			MouseMove, TaskbarX, TaskbarY
 			Click
 			Score := ReadScore()
-			FileAppend, %organism%`t%Score%`n, Organisms2.txt
+			FileAppend, %organism%`t%Score%`n, TestedOrganisms.txt
 			organism := ""
 			WinActivate, Trials Evolution Gold Edition
 			Sleep (1000)
