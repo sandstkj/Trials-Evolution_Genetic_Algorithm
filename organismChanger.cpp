@@ -14,9 +14,9 @@ struct organism {
 const int CHUNK_SIZE = 4;
 const int NUM_ELITES = 4;
 
-std::string INPUT_FILE = "org.txt";
-std::string ELITE_OUTPUT_FILE = "eliteOrg.txt";
-
+std::string INPUT_FILE = "TestedOrganisms.txt";
+std::string OUTPUT_FILE = "UntestedOrganisms.txt";
+std::string HISTORY_FILE = "History.txt";
 
 // A vector of chunks, with each having identities that have their scores
 static std::vector<std::unordered_map<std::string, std::vector<int>>> chunkScores;
@@ -93,18 +93,27 @@ int main(int argc, char* argv[]) {
 
 	// Organize highest to lowest score
 	std::sort(organisms.begin(), organisms.end(), [](organism a, organism b){return a.score > b.score;});
-	/*
-	for (auto o : organisms) {
-		std::cout << o.sequence << "\t" << o.score << std::endl;
+
+	// Save all organisms to history
+	try {
+		std::ofstream history;
+		history.open(HISTORY_FILE, std::ios_base::app);
+		for (auto o : organisms) {
+//			std::cout << o.sequence << "\t" << o.score << std::endl;
+			history << o.sequence << "\t" << o.score << std::endl;
+		}
+		history.close();
+	} catch (std::exception &e) {
+		std::cout << "Unable to write to history" << std::endl;
 	}
-	*/
+
 	// Write elite organisms to file
-	std::ofstream output(ELITE_OUTPUT_FILE);
+	std::ofstream output(OUTPUT_FILE);
 	try {
 		for (auto i = 0; i < organisms.size() && i < NUM_ELITES; i++) {
 			output << organisms[i].sequence << "\t" << organisms[i].score << std::endl;
 		}
 	} catch (std::exception &e) {
-
+		std::cout << "A problem occurred while writing the list of elites" << std::endl;
 	}
 }
