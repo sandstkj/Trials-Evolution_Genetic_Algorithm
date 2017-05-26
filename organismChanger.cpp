@@ -1,3 +1,5 @@
+// #define __USE_MINGW_ANSI_STDIO 0
+
 #include <string>
 #include <iostream>
 #include <vector>
