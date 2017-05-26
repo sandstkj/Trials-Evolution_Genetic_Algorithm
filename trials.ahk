@@ -1,18 +1,22 @@
 MsgBox, Trials Evolution AI
 
 if (!fileExist("UntestedOrganisms.txt")){
-	MsgBox, Organism list does not exist, generating a new species.
+	MsgBox, Organism list does not exist, closing.
 	Exit
 } else {
 	MsgBox, Organism list loaded.
 }
 
+ifWinNotExist, Trials Evolution Gold Edition
+{
+	MsgBox, Trials is not open; please open the game before running this program
+	Exit
+}
+
 Sleep (500)
-SplashImage, trials.jpg, b
+SplashImage, program.png, b
 Sleep (500)
 SplashImage, Off
-
-; SplashImage, trials.jpg, , , , Reference
 
 ; MsgBox, Welcome to the Trials AI setup!`nPlease place the mouse above "Stats" and press enter
 ; MouseGetPos, StatsX, StatsY
@@ -39,10 +43,9 @@ curLineNumber := 1
 Loop, read, UntestedOrganisms.txt
 {
 	line := A_LoopReadLine
-	; FileReadLine, line, UntestedOrganisms.txt, %curLineNumber%
+	
 	; Load organism into array
 	Array := Object()
-
 	
 	if (SubStr(line, 1, 1) == "f"){
 		MsgBox, Found end of file
@@ -51,7 +54,6 @@ Loop, read, UntestedOrganisms.txt
 	index := 1
 	while index < StrLen(line) + 1 {
 		Array.Insert(SubStr(line, index, 1))
-		; MsgBox % Array[i]
 		index++
 	}
 
@@ -75,12 +77,51 @@ Loop, read, UntestedOrganisms.txt
 			Send {Left Up}
 			organism := organism . "2"
 		} else if % CurMove == 3 {
-			; Lean Right
+			; Lean right
 			Send {Right Down}
 			Sleep (500)
 			Send {Right Up}
 			organism := organism . "3"
+		} else if % CurMove == 4 {
+			; Lean right, go forward
+			Send {Right Down}
+			Send {Up Down}
+			Sleep (500)
+			Send {Right Up}
+			Send {Up Up}
+			organism := organism . "4"
+		} else if % CurMove == 5 {
+			; Lean left, go forward
+			Send {Left Down}
+			Send {Up Down}
+			Sleep (500)
+			Send {Left Up}
+			Send {Up Up}
+			organism := organism . "5"
+		} else if % CurMove == 6 {
+			; Stop
+			Send {Down Down}
+			Sleep (500)
+			Send {Down Up}
+			organism := organism . "6"
+		} else if % CurMove == 7 {
+			; Lean right, stop
+			Send {Right Down}
+			Send {Down Down}
+			Sleep (500)
+			Send {Right Up}
+			Send {Down Up}
+			organism := organism . "7"
+		} else if % CurMove == 8 {
+			; Lean left, stop
+			Send {Right Down}
+			Send {Down Down}
+			Sleep (500)
+			Send {Right Up}
+			Send {Down Up}
+			organism := organism . "8"
 		}
+		
 		GetKeyState, state, NumpadAdd, P
 		if state = D
 		{
@@ -97,7 +138,14 @@ Loop, read, UntestedOrganisms.txt
 			Click down
 			Sleep (200)
 			Click up
-			Sleep (500)
+			MouseMove, 1200, 851, 10
+			MouseMove, 1200, 900, 10
+			MouseMove, 1200, 851, 10
+			Sleep (1000)
+			Click down
+			Sleep (200)
+			Click up
+			Sleep (5000)
 			DllCall("SetCursorPos", int, %TaskbarX%, int, %TaskbarY%)
 			MouseMove, TaskbarX, TaskbarY
 			Click
@@ -112,7 +160,6 @@ Loop, read, UntestedOrganisms.txt
 		i++
 	}
 	curLineNumber++
-	; MsgBox, CurLineNumber is %curLineNumber%
 }
 MsgBox, End Of Program
 
@@ -135,6 +182,7 @@ ReadScore(){
 	Sleep (1000)
 	
 	PixelSearch, FirstOrangeX, , 400, -787, 500, -787, 0x00ACFF
+	MouseMove, FirstOrangeX, 15, 10
 	
 	val := -1
 	if (FirstOrangeX == 452) {
@@ -200,15 +248,12 @@ CheckLikenessOf(DigitX, DigitY, NumToCheck)
 		
 		PixelGetColor, ActualColor, TranslatedX, TranslatedY
 		White := 0xFFFFFF
-		; MouseMove, TranslatedX, TranslatedY
+		MouseMove, TranslatedX, TranslatedY, 10
 		if (ActualColor == White)
 		{
-			; MsgBox, Looks good for %NumToCheck%
 		} else {
-			; MsgBox, Looks bad for %NumToCheck% at`n%CurX% %CurY%
 			return false
 		}
 	}
-	; MsgBox, Looks good for %NumToCheck%
 	return true
 }
